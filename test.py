@@ -1,0 +1,15 @@
+from ladder.ladder import Vargroup
+from ladder.ladder import LDIpt
+
+if __name__ == '__main__':
+    vars = Vargroup(["a", "b", "c", "d", "e", "f", "k", "j", "h"])
+    vars["a"] = 1
+    vars["b"] = 1
+    vars["d"] = 1
+    vars["e"] = 1
+    ld = LDIpt(vars)
+    ld.line("--|a|--o--|b|----o------[c]")
+    ld.line("       o--|e|----o         ")
+    ld.run()
+
+    print("Program end")

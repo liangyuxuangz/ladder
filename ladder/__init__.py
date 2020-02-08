@@ -2,6 +2,6 @@
 # -*- coding: UTF-8 -*-
 
 if __name__ == '__main__':
-    print('作为主程序运行')
+    pass
 else:
-    print('package_runoob 初始化')
+    pass

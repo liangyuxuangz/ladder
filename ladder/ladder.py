@@ -145,6 +145,10 @@ class LDIpt():
         searchobj = re.search(r'-[oO]|[oO]-', tmp)
         return searchobj.regs
 
+    def printvars(self):
+        for k, v in self.vars.items():
+            print("dict[%s]=" % k, v)
+
 
 def f_AND(self, sourceval):
     self.val = sourceval and self.varlink[self.varlinkname]
@@ -152,7 +156,7 @@ def f_AND(self, sourceval):
 
 
 def f_NAND(self, sourceval):
-    self.val = sourceval and self.varlink[self.varlinkname]
+    self.val = sourceval and not(self.varlink[self.varlinkname])
     self.nodelink.go(self.val)
 
 
@@ -189,51 +193,41 @@ def f_End(self, sourceval):
 
 
 def f_U_DP(self, sourceval):
-    self.val = self.varlink[self.varlinkname] and sourceval
-    if (self.preval == 0) and (self.val == 1):
-        self.val = 1
-        self.preval = 1
-        self.nodelink(self.val)
+    varval = self.varlink[self.varlinkname]
+    if (self.preval == 0) and (varval == 1):
+        self.val = sourceval and 1
     else:
-        self.val = 0
-        self.preval = 0
-        self.nodelink(self.val)
+        self.val = sourceval and 0
+    self.preval = varval
+    self.nodelink.go(self.val)
 
 
 def f_D_DP(self, sourceval):
-    self.val = self.varlink[self.varlinkname] and sourceval
-    if (self.preval == 1) and (self.val == 0):
-        self.val = 1
-        self.preval = 1
-        self.nodelink(self.val)
+    varval = self.varlink[self.varlinkname]
+    if (self.preval == 1) and (varval == 0):
+        self.val = sourceval and 1
     else:
-        self.val = 0
-        self.preval = 0
-        self.nodelink(self.val)
+        self.val = sourceval and 0
+    self.preval = varval
+    self.nodelink.go(self.val)
 
 
 def f_DPU(self, sourceval):
-    self.val = sourceval
-    if (self.preval == 0) and (self.val == 1):
+    if (self.preval == 0) and (sourceval == 1):
         self.val = 1
-        self.preval = 1
-        self.nodelink(self.val)
     else:
         self.val = 0
-        self.preval = 0
-        self.nodelink(self.val)
+    self.preval = sourceval
+    self.nodelink.go(self.val)
 
 
 def f_N_DPU(self, sourceval):
-    self.val = sourceval
-    if (self.preval == 1) and (self.val == 0):
+    if (self.preval == 1) and (sourceval == 0):
         self.val = 1
-        self.preval = 1
-        self.nodelink(self.val)
     else:
         self.val = 0
-        self.preval = 0
-        self.nodelink(self.val)
+    self.preval = sourceval
+    self.nodelink.go(self.val)
 
 
 class Node():
@@ -241,6 +235,7 @@ class Node():
         self.name = name
         self.val = 0
         self.type = 0
+        self.preval = 0
         self.varlink = vars
         self.varlinkname = None
         self.nodelink = None
@@ -265,5 +260,3 @@ def Vargroup(varnamelist):
 #     ld.run()
 
 #     print("Program end")
-
-

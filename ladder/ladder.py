@@ -2,6 +2,11 @@ import re
 import types
 
 
+def MKblock(vars):
+    block = LDIpt(vars)
+    return block
+
+
 class LDIpt():
     def __init__(self, vars):
         # 建立梯形图起点节点列表
@@ -36,10 +41,13 @@ class LDIpt():
             self.nodedefine(prglist)
 
     def run(self):
-        self.cangetvar = 1
+        self.getvarblock = 1
         for x in self.start_nodelist:
             if x.nodelink is not None:
                 x.nodelink.go(x.val)
+
+    def init(self):
+        self.getvarblock = 0
 
     def nodelink(self, source):
         if self.pre_node.type != 10:
